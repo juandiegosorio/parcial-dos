@@ -1,5 +1,5 @@
-import { ActividadEntity } from 'src/actividad/actividad.entity/actividad.entity';
-import { ReseniaEntity } from 'src/resenia/resenia.entity/resenia.entity';
+import { ActividadEntity } from '../../actividad/actividad.entity/actividad.entity';
+import { ReseniaEntity } from '../../resenia/resenia.entity/resenia.entity';
 import {
   Column,
   Entity,

@@ -3,10 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   BusinessError,
   BusinessLogicException,
-} from 'src/shared/errors/business-errors';
+} from '../shared/errors/business-errors';
 import { Repository } from 'typeorm';
 import { EstudianteEntity } from './estudiante.entity/estudiante.entity';
-import { ActividadEntity } from 'src/actividad/actividad.entity/actividad.entity';
+import { ActividadEntity } from '../actividad/actividad.entity/actividad.entity';
 
 function isValidEmail(email: string): boolean {
   const re =
@@ -19,6 +19,7 @@ export class EstudianteService {
   constructor(
     @InjectRepository(EstudianteEntity)
     private readonly estudianteRepository: Repository<EstudianteEntity>,
+    @InjectRepository(ActividadEntity)
     private readonly actividadRepository: Repository<ActividadEntity>,
   ) {}
 
@@ -50,13 +51,12 @@ export class EstudianteService {
         BusinessError.PRECONDITION_FAILED,
       );
   }
-
   async inscribirseActividad(estudianteID: number, actividadID: number) {
-    const estudiante = this.findOne(estudianteID);
+    const estudiante = await this.findOne(estudianteID);
     const actividad: ActividadEntity | null =
       await this.actividadRepository.findOne({
         where: { id: actividadID },
-        relations: ['actividades', 'resenias'],
+        relations: ['estudiantes', 'resenias'],
       });
     if (!actividad) {
       throw new BusinessLogicException(
@@ -64,16 +64,46 @@ export class EstudianteService {
         BusinessError.NOT_FOUND,
       );
     }
+    
+    // Initialize arrays if they don't exist
+    if (!actividad.estudiantes) {
+      actividad.estudiantes = [];
+    }
+    
+    if (!estudiante.actividades) {
+      estudiante.actividades = [];
+    }
+    
     if (
       actividad.estudiantes.length < actividad.cupoMaximo &&
-      (await estudiante).actividades.length == 0
+      estudiante.actividades.length === 0
     ) {
-      const estudianteEntity = await estudiante;
-      estudianteEntity.actividades.push(actividad);
-      actividad.estudiantes.push(estudianteEntity);
-      await this.estudianteRepository.save(estudianteEntity);
+      estudiante.actividades.push(actividad);
+      actividad.estudiantes.push(estudiante);
+      await this.estudianteRepository.save(estudiante);
       await this.actividadRepository.save(actividad);
-      return estudianteEntity;
+      
+      // Return a plain object to avoid circular JSON reference
+      return {
+        id: estudiante.id,
+        cedula: estudiante.cedula,
+        nombre: estudiante.nombre,
+        correo: estudiante.correo,
+        programa: estudiante.programa,
+        semestre: estudiante.semestre,
+        actividades: [{
+          id: actividad.id,
+          titulo: actividad.titulo,
+          fecha: actividad.fecha,
+          cupoMaximo: actividad.cupoMaximo,
+          estado: actividad.estado
+        }]
+      };
+    } else {
+      throw new BusinessLogicException(
+        'El estudiante ya está inscrito en otra actividad o la actividad está llena',
+        BusinessError.PRECONDITION_FAILED
+      );
     }
   }
 }

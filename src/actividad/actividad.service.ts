@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   BusinessError,
   BusinessLogicException,
-} from 'src/shared/errors/business-errors';
+} from '../shared/errors/business-errors';
 import { Repository } from 'typeorm';
 import { ActividadEntity } from './actividad.entity/actividad.entity';
 
@@ -18,7 +18,7 @@ export class ActividadService {
     const actividad: ActividadEntity | null =
       await this.actividadRepository.findOne({
         where: { id },
-        relations: ['actividades', 'resenias'],
+        relations: ['estudiantes', 'resenias'],
       });
     if (!actividad)
       throw new BusinessLogicException(
@@ -43,34 +43,40 @@ export class ActividadService {
         BusinessError.PRECONDITION_FAILED,
       );
   }
-
   async cambiarEstado(actividadID: number, estado: number) {
-    const actividad = this.findOne(actividadID);
+    const actividadObj = await this.findOne(actividadID);
+
+    // Estado 1 (en progreso): al menos 80% del cupo máximo
     if (
       estado == 1 &&
-      (await actividad).estudiantes.length >=
-        (await actividad).estudiantes.length * 0.8
+      actividadObj.estudiantes.length >= actividadObj.cupoMaximo * 0.8
     ) {
-      const actividadToUpdate = await actividad;
-      actividadToUpdate.estado = estado;
-      return this.actividadRepository.save(actividadToUpdate);
-    } else if (
+      actividadObj.estado = estado;
+      return this.actividadRepository.save(actividadObj);
+    }
+    // Estado 2 (finalizada): cupo completo
+    else if (
       estado == 2 &&
-      (await actividad).estudiantes.length == (await actividad).cupoMaximo
+      actividadObj.estudiantes.length == actividadObj.cupoMaximo
     ) {
-      const actividadToUpdate = await actividad;
-      actividadToUpdate.estado = estado;
-      return this.actividadRepository.save(actividadToUpdate);
-    } else
+      actividadObj.estado = estado;
+      return this.actividadRepository.save(actividadObj);
+    }
+    // Estado 0 (pendiente): siempre se puede cambiar a pendiente
+    else if (estado == 0) {
+      actividadObj.estado = estado;
+      return this.actividadRepository.save(actividadObj);
+    } else {
       throw new BusinessLogicException(
         'No se puede cambiar el estado de la actividad. No cumple con los requisitos necesarios.',
         BusinessError.PRECONDITION_FAILED,
       );
+    }
   }
   async findAllActividadesByDate(fecha: string): Promise<ActividadEntity[]> {
     return this.actividadRepository.find({
       where: { fecha: fecha },
-      relations: ['actividades', 'resenias'],
+      relations: ['estudiantes', 'resenias'],
     });
   }
 }
