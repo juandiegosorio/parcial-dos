@@ -1,0 +1,1233 @@
+{
+	"info": {
+		"_postman_id": "8972b881-4a3c-4d93-91aa-bb925e731865",
+		"name": "Parcial2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32594999"
+	},
+	"item": [
+		{
+			"name": "Estudiantes",
+			"item": [
+				{
+					"name": "Obtener Estudiante por id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response has the required fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.id).to.exist;\r",
+									"    pm.expect(responseData.cedula).to.exist;\r",
+									"    pm.expect(responseData.nombre).to.exist;\r",
+									"    pm.expect(responseData.correo).to.exist;\r",
+									"    pm.expect(responseData.programa).to.exist;\r",
+									"    pm.expect(responseData.semestre).to.exist;\r",
+									"    pm.expect(responseData.resenias).to.exist;\r",
+									"    pm.expect(responseData.actividades).to.exist;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Cedula is a non-negative integer\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.cedula).to.be.a('number');\r",
+									"    pm.expect(responseData.cedula).to.be.at.least(0, \"Cedula should be a non-negative integer\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Correo is in a valid email format\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.correo).to.match(/\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b/);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate the actividades array is present and is an empty array\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.actividades).to.exist.and.to.be.an('array').that.is.empty;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/estudiantes/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"estudiantes",
+								"1"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Obtener Estudiante por id",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/estudiantes/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"estudiantes",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [
+								{
+									"expires": "Invalid Date"
+								}
+							],
+							"body": "{\n    \"id\": 1,\n    \"cedula\": 10000000,\n    \"nombre\": \"Estudiante 1\",\n    \"correo\": \"estudiante1@example.com\",\n    \"programa\": \"Programa 1\",\n    \"semestre\": 1,\n    \"actividades\": [],\n    \"resenias\": []\n}"
+						},
+						{
+							"name": "Estudiante no encontrado",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/estudiantes/2",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"estudiantes",
+										"2"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 404,\n    \"message\": \"El estudiante con el id dado no fue encontrado\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Crear Estudiante",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response has the required fields - id, cedula, nombre, correo, programa, and semestre\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.id).to.exist;\r",
+									"    pm.expect(responseData.cedula).to.exist;\r",
+									"    pm.expect(responseData.nombre).to.exist;\r",
+									"    pm.expect(responseData.correo).to.exist;\r",
+									"    pm.expect(responseData.programa).to.exist;\r",
+									"    pm.expect(responseData.semestre).to.exist;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Id is a non-negative integer\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseData.id).to.be.a('number').and.to.be.at.least(0);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Cedula is a non-negative integer\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData.cedula).to.exist;\r",
+									"    pm.expect(responseData.cedula).to.be.a('number');\r",
+									"    pm.expect(responseData.cedula).to.be.at.least(0);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"cedula\": 1002,\r\n  \"nombre\": \"María López\",\r\n  \"correo\": \"maria.lopez@example.com\",\r\n  \"programa\": \"Ingeniería Electrónica\",\r\n  \"semestre\": 4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/estudiantes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"estudiantes"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Creacion Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"cedula\": 1002,\r\n  \"nombre\": \"María López\",\r\n  \"correo\": \"maria.lopez@example.com\",\r\n  \"programa\": \"Ingeniería Electrónica\",\r\n  \"semestre\": 4\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/estudiantes",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"estudiantes"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\r\n  \"id\": 2,\r\n  \"cedula\": 1002,\r\n  \"nombre\": \"María López\",\r\n  \"correo\": \"maria.lopez@example.com\",\r\n  \"programa\": \"Ingeniería Electrónica\",\r\n  \"semestre\": 4,\r\n  \"actividades\": [],\r\n  \"resenias\": []\r\n}"
+						},
+						{
+							"name": "Datos invalidos",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"cedula\": 1002,\r\n  \"nombre\": \"María López\",\r\n  \"correo\": \"maria.lopez@example.com\",\r\n  \"programa\": \"Ingeniería Electrónica\",\r\n  \"semestre\": 4\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/estudiantes",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"estudiantes"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\r\n  \"statusCode\": 400,\r\n  \"message\": [\r\n    \"correo must be an email\",\r\n    \"semestre must not be greater than 10\"\r\n  ],\r\n  \"error\": \"Bad Request\"\r\n}"
+						}
+					]
+				},
+				{
+					"name": "Inscribir a una actividad",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(201);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response has the required fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.id).to.exist;\r",
+									"    pm.expect(responseData.cedula).to.exist;\r",
+									"    pm.expect(responseData.nombre).to.exist;\r",
+									"    pm.expect(responseData.correo).to.exist;\r",
+									"    pm.expect(responseData.programa).to.exist;\r",
+									"    pm.expect(responseData.semestre).to.exist;\r",
+									"    pm.expect(responseData.actividades).to.exist;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate the fecha field in actividades array is in a valid date format\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.actividades).to.be.an('array');\r",
+									"\r",
+									"    responseData.actividades.forEach(function(actividad) {\r",
+									"        pm.expect(actividad.fecha).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/estudiantes/1/actividades/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"estudiantes",
+								"1",
+								"actividades",
+								"1"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Estudiante ya inscrito",
+							"originalRequest": {
+								"method": "GET",
+								"header": []
+							},
+							"status": "Precondition Failed",
+							"code": 412,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 412,\n    \"message\": \"El estudiante ya está inscrito en otra actividad o la actividad está llena\"\n}"
+						},
+						{
+							"name": "Inscripcion exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/estudiantes/2/actividades/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"estudiantes",
+										"2",
+										"actividades",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 2,\n    \"cedula\": 1002,\n    \"nombre\": \"María López\",\n    \"correo\": \"maria.lopez@example.com\",\n    \"programa\": \"Ingeniería Electrónica\",\n    \"semestre\": 4,\n    \"actividades\": [\n        {\n            \"id\": 1,\n            \"titulo\": \"Taller Java\",\n            \"fecha\": \"2023-06-15\",\n            \"cupoMaximo\": 20,\n            \"estado\": 0\n        }\n    ]\n}"
+						},
+						{
+							"name": "Actividad No Encontrada",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/estudiantes/2/actividades/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"estudiantes",
+										"2",
+										"actividades",
+										"1"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 404,\n    \"message\": \"La actividad no se encontro\"\n}"
+						}
+					]
+				}
+			],
+			"description": "## 1\\. Pruebas de Estudiantes\n\n### 1.1. Crear Estudiante (Caso válido)\n\n**Justificación:** Este caso prueba la funcionalidad básica de creación de estudiantes, que es fundamental para todo el sistema. Es necesario confirmar que podemos registrar correctamente un estudiante con toda su información, ya que los estudiantes son entidades principales que interactúan con actividades y generan reseñas. Si esta funcionalidad fallara, gran parte del sistema no funcionaría.\n\n### 1.2. Crear Estudiante con email inválido (Caso negativo)\n\n**Justificación:** La validación de datos es crítica para mantener la integridad de la base de datos. Específicamente, el correo electrónico es un campo importante que debe tener un formato correcto, ya que podría utilizarse para comunicaciones futuras. Esta prueba verifica que el sistema implemente correctamente las validaciones definidas en los DTOs y rechace adecuadamente entradas incorrectas.\n\n### 1.3. Obtener Estudiante por ID\n\n**Justificación:** La recuperación de datos de estudiantes es esencial para múltiples operaciones del sistema, como inscripciones y reseñas. Esta prueba verifica que el sistema no solo almacene correctamente los datos, sino que también pueda recuperarlos posteriormente sin pérdida de información, incluyendo relaciones con otras entidades.\n\n### 1.4. Obtener Estudiante inexistente (Caso negativo)\n\n**Justificación:** Un sistema robusto debe manejar adecuadamente los casos de error. Probar la búsqueda de un estudiante inexistente verifica que el sistema proporcione mensajes de error claros y códigos de estado HTTP apropiados, mejorando así la experiencia del usuario y facilitando la depuración."
+		},
+		{
+			"name": "Actividades",
+			"item": [
+				{
+					"name": "Obtener Actividad",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response has the required fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData).to.include.all.keys('id', 'titulo', 'fecha', 'cupoMaximo', 'estado', 'estudiantes', 'resenias');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Date format is valid\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.have.property('fecha').that.is.a('string').and.matches(/^\\d{4}-\\d{2}-\\d{2}$/);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Estudiantes array is present and contains expected number of elements\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.estudiantes).to.exist;\r",
+									"    pm.expect(responseData.estudiantes).to.be.an('array');\r",
+									"    pm.expect(responseData.estudiantes).to.have.lengthOf(1);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/actividades/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"actividades",
+								"1"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Actividad Encontrada",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/actividades/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"actividades",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"titulo\": \"Taller Java\",\n    \"fecha\": \"2023-06-15\",\n    \"cupoMaximo\": 20,\n    \"estado\": 0,\n    \"estudiantes\": [\n        {\n            \"id\": 1,\n            \"cedula\": 1001,\n            \"nombre\": \"Juan Perez\",\n            \"correo\": \"juan@example.com\",\n            \"programa\": \"Ingeniería de Sistemas\",\n            \"semestre\": 6\n        },\n        {\n            \"id\": 2,\n            \"cedula\": 1002,\n            \"nombre\": \"María López\",\n            \"correo\": \"maria.lopez@example.com\",\n            \"programa\": \"Ingeniería Electrónica\",\n            \"semestre\": 4\n        }\n    ],\n    \"resenias\": []\n}"
+						},
+						{
+							"name": "Actividad No Encontrada",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/actividades/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"actividades",
+										"1"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 404,\n    \"message\": \"La actividad con el id dado no fue encontrada\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Crear Actividad",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(201);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response has the required fields - id, titulo, fecha, cupoMaximo, estado\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.id).to.exist;\r",
+									"    pm.expect(responseData.titulo).to.exist;\r",
+									"    pm.expect(responseData.fecha).to.exist;\r",
+									"    pm.expect(responseData.cupoMaximo).to.exist;\r",
+									"    pm.expect(responseData.estado).to.exist;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Fecha is in a valid date format\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.fecha).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"titulo\": \"Taller Python\",\r\n  \"fecha\": \"2023-06-20\",\r\n  \"cupoMaximo\": 1,\r\n  \"estado\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/actividades",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"actividades"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Creacion Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Taller Python\",\r\n  \"fecha\": \"2023-06-20\",\r\n  \"cupoMaximo\": 5,\r\n  \"estado\": 0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/actividades",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"actividades"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 2,\n    \"titulo\": \"Taller Python\",\n    \"fecha\": \"2023-06-20\",\n    \"cupoMaximo\": 5,\n    \"estado\": 0,\n    \"estudiantes\": [],\n    \"resenias\": []\n}"
+						},
+						{
+							"name": "Titulo Invalido",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"titulo\": \"Taller Python\",\r\n  \"fecha\": \"2023-06-20\",\r\n  \"cupoMaximo\": 5,\r\n  \"estado\": 0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/actividades",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"actividades"
+									]
+								}
+							},
+							"status": "Precondition Failed",
+							"code": 412,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 412,\n    \"message\": \"El título no debe exceder los 15 caracteres y no debe contener símbolos\"\n}s"
+						}
+					]
+				},
+				{
+					"name": "Cambiar Estado a Actividad",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 412\", function () {\r",
+									"  pm.expect(pm.response.code).to.equal(412);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response has the required fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.id).to.exist;\r",
+									"    pm.expect(responseData.titulo).to.exist;\r",
+									"    pm.expect(responseData.fecha).to.exist;\r",
+									"    pm.expect(responseData.cupoMaximo).to.exist;\r",
+									"    pm.expect(responseData.estado).to.exist;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is within an acceptable range\", function () {\r",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/actividades/1/estado/2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"actividades",
+								"1",
+								"estado",
+								"2"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Cambio exitoso a estado en progreso",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/actividades/1/estado/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"actividades",
+										"1",
+										"estado",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\r\n  \"id\": 1,\r\n  \"titulo\": \"Taller Java\",\r\n  \"fecha\": \"2023-06-15\",\r\n  \"cupoMaximo\": 20,\r\n  \"estado\": 1,\r\n  \"estudiantes\": [\r\n    {\r\n      \"id\": 1,\r\n      \"cedula\": 1001,\r\n      \"nombre\": \"Juan Perez\"\r\n    },\r\n    {\r\n      \"id\": 2,\r\n      \"cedula\": 1002,\r\n      \"nombre\": \"María López\"\r\n    },\r\n    // ... más estudiantes para cumplir con el 80% del cupo\r\n  ],\r\n  \"resenias\": []\r\n}"
+						},
+						{
+							"name": "Insuficientes estudiantes",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/actividades/1/estado/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"actividades",
+										"1",
+										"estado",
+										"1"
+									]
+								}
+							},
+							"status": "Precondition Failed",
+							"code": 412,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\r\n  \"statusCode\": 412,\r\n  \"message\": \"Para pasar a estado 1, al menos el 80% del cupo máximo debe estar ocupado\"\r\n}"
+						}
+					]
+				},
+				{
+					"name": "Actividades por Fecha",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response has the required fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('array').that.is.not.empty;\r",
+									"\r",
+									"    responseData.forEach(function(activity) {\r",
+									"        pm.expect(activity).to.have.property('id');\r",
+									"        pm.expect(activity).to.have.property('titulo');\r",
+									"        pm.expect(activity).to.have.property('fecha');\r",
+									"        pm.expect(activity).to.have.property('cupoMaximo');\r",
+									"        pm.expect(activity).to.have.property('estado');\r",
+									"        pm.expect(activity).to.have.property('estudiantes');\r",
+									"        pm.expect(activity).to.have.property('resenias');\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Fecha is in a valid date format\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"\r",
+									"    responseData.forEach(function(actividad) {\r",
+									"        pm.expect(actividad.fecha).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Estudiantes array is present and contains the expected number of elements\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('array');\r",
+									"    responseData.forEach(function(item) {\r",
+									"        pm.expect(item.estudiantes).to.exist;\r",
+									"        pm.expect(item.estudiantes).to.be.an('array');\r",
+									"        pm.expect(item.estudiantes).to.have.lengthOf.at.least(1, \"Estudiantes array should not be empty\");\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/actividades?fecha=2023-06-20",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"actividades"
+							],
+							"query": [
+								{
+									"key": "fecha",
+									"value": "2023-06-20"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Actividades Encontradas",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/actividades?fecha=2023-06-15",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"actividades"
+									],
+									"query": [
+										{
+											"key": "fecha",
+											"value": "2023-06-15"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "[\r\n  {\r\n    \"id\": 1,\r\n    \"titulo\": \"Taller Java\",\r\n    \"fecha\": \"2023-06-15\",\r\n    \"cupoMaximo\": 20,\r\n    \"estado\": 1,\r\n    \"estudiantes\": [\r\n      {\r\n        \"id\": 1,\r\n        \"cedula\": 1001,\r\n        \"nombre\": \"Juan Perez\"\r\n      },\r\n      {\r\n        \"id\": 2,\r\n        \"cedula\": 1002,\r\n        \"nombre\": \"María López\"\r\n      }\r\n    ],\r\n    \"resenias\": []\r\n  }\r\n]"
+						},
+						{
+							"name": "Sin Actividades en la Fecha",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/actividades?fecha=2023-06-15",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"actividades"
+									],
+									"query": [
+										{
+											"key": "fecha",
+											"value": "2023-06-15"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "[]"
+						}
+					]
+				}
+			],
+			"description": "## 2\\. Pruebas de Actividades\n\n### 2.1. Crear Actividad (Caso válido)\n\n**Justificación:** Las actividades constituyen el núcleo del sistema, por lo que es crucial verificar que puedan crearse correctamente. Esta prueba confirma que todos los atributos obligatorios se almacenan correctamente y prepara el escenario para pruebas más complejas de inscripciones y cambios de estado.\n\n### 2.2. Crear Actividad con título demasiado largo (Caso negativo)\n\n**Justificación:** Esta prueba verifica una regla de negocio específica: los títulos de actividades deben tener menos de 15 caracteres. Confirmar que el sistema rechaza correctamente títulos demasiado largos garantiza que las restricciones de negocio se implementen adecuadamente a nivel de aplicación, no solo a nivel de base de datos.\n\n### 2.3. Obtener Actividad por ID\n\n**Justificación:** Similar a la recuperación de estudiantes, es fundamental verificar que los datos de actividades se almacenen y recuperen correctamente. Esto también prueba indirectamente que las relaciones (estudiantes inscritos, reseñas) se manejen adecuadamente en la respuesta.\n\n### 2.4. Obtener Actividades por fecha\n\n**Justificación:** El filtrado por fecha es una funcionalidad clave para los usuarios que buscan actividades específicas. Esta prueba verifica que el sistema pueda realizar consultas más complejas que una simple búsqueda por ID, demostrando la flexibilidad del API para satisfacer necesidades de usuario reales.\n\n## 3\\. Pruebas de Inscripción y Estado de Actividades\n\n### 3.1. Inscribir estudiante en actividad\n\n**Justificación:** La inscripción es una operación crítica que establece relaciones entre estudiantes y actividades. Esta prueba verifica que el sistema pueda crear correctamente estas relaciones, actualizar ambas entidades y manejar las referencias cruzadas en la base de datos.\n\n### 3.2. Intentar inscribir al mismo estudiante en otra actividad (Caso negativo)\n\n**Justificación:** Esta prueba verifica una importante regla de negocio: un estudiante solo puede inscribirse en una única actividad. Confirmar que el sistema rechaza intentos de doble inscripción garantiza la integridad de los datos y el cumplimiento de las restricciones del dominio.\n\n### 3.3. Cambiar estado de actividad a \"en progreso\" sin suficientes estudiantes (Caso negativo)\n\n**Justificación:** Esta prueba verifica otra regla de negocio crucial: una actividad solo puede pasar a estado \"en progreso\" si tiene al menos el 80% del cupo máximo ocupado. Esto confirma que el sistema mantiene la integridad del ciclo de vida de las actividades según lo especificado en los requisitos."
+		},
+		{
+			"name": "Resenias",
+			"item": [
+				{
+					"name": "Crear Resenia",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 500\", function () {\r",
+									"  pm.response.to.have.status(500);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response has the required fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.id).to.exist;\r",
+									"    pm.expect(responseData.comentario).to.exist;\r",
+									"    pm.expect(responseData.fecha).to.exist;\r",
+									"    pm.expect(responseData.calificacion).to.exist;\r",
+									"    pm.expect(responseData.estudiante).to.exist;\r",
+									"    pm.expect(responseData.actividad).to.exist;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate 'estudiante' object contains id, cedula, and nombre\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData.estudiante).to.exist;\r",
+									"    pm.expect(responseData.estudiante.id).to.be.a('number');\r",
+									"    pm.expect(responseData.estudiante.cedula).to.be.a('number');\r",
+									"    pm.expect(responseData.estudiante.nombre).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Ensure that the 'actividad' object contains id and titulo\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData.actividad).to.be.an('object');\r",
+									"    pm.expect(responseData.actividad.id).to.exist;\r",
+									"    pm.expect(responseData.actividad.titulo).to.exist;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"comentario\": \"Excelente taller, muy didáctico\",\r\n  \"fecha\": \"2023-06-16\",\r\n  \"calificacion\": \"5\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/resenias/1/estudiante/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"resenias",
+								"1",
+								"estudiante",
+								"1"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Reseña creada correctamente",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"comentario\": \"Excelente taller, muy didáctico\",\r\n  \"fecha\": \"2023-06-16\",\r\n  \"calificacion\": \"5\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/resenias/1/estudiante/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"resenias",
+										"1",
+										"estudiante",
+										"1"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\r\n  \"id\": 1,\r\n  \"comentario\": \"Excelente taller, muy didáctico\",\r\n  \"fecha\": \"2023-06-16\",\r\n  \"calificacion\": \"5\",\r\n  \"estudiante\": {\r\n    \"id\": 1,\r\n    \"cedula\": 1001,\r\n    \"nombre\": \"Juan Perez\"\r\n  },\r\n  \"actividad\": {\r\n    \"id\": 1,\r\n    \"titulo\": \"Taller Java\"\r\n  }\r\n}"
+						},
+						{
+							"name": "Actividad no finalizada",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"comentario\": \"Excelente taller, muy didáctico\",\r\n  \"fecha\": \"2023-06-16\",\r\n  \"calificacion\": \"5\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/resenias/1/estudiante/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"resenias",
+										"1",
+										"estudiante",
+										"1"
+									]
+								}
+							},
+							"status": "Precondition Failed",
+							"code": 412,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 412,\n    \"message\": \"La actividad debe estar finalizada (estado 2) para poder agregar reseñas\"\n}"
+						},
+						{
+							"name": "Estudiante No Inscrito",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"comentario\": \"Excelente taller, muy didáctico\",\r\n  \"fecha\": \"2023-06-16\",\r\n  \"calificacion\": \"5\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/resenias/1/estudiante/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"resenias",
+										"1",
+										"estudiante",
+										"1"
+									]
+								}
+							},
+							"status": "Precondition Failed",
+							"code": 412,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 412,\n    \"message\": \"El estudiante no está inscrito en esta actividad\"\n}"
+						}
+					]
+				}
+			],
+			"description": "## 4\\. Pruebas de Reseñas\n\n### 4.1. Intentar agregar reseña a actividad no finalizada (Caso negativo)\n\n**Justificación:** Esta prueba verifica una restricción importante: las reseñas solo pueden agregarse a actividades finalizadas. Esto garantiza que el flujo de trabajo de la aplicación sea respetado, evitando reseñas prematuras de actividades que aún no han concluido.\n\n## 5\\. Prueba de Flujo Completo\n\n### 5.1. Flujo completo de creación, inscripción, cambio de estado y reseña\n\n**Justificación:** Esta prueba integral es quizás la más importante porque verifica que todos los componentes del sistema funcionen correctamente en conjunto. Al simular un escenario de uso completo desde la creación de una actividad hasta la publicación de reseñas, se comprueba la integración entre los diferentes módulos y se confirma que el sistema cumpla con su propósito general. Esta prueba end-to-end puede detectar problemas que las pruebas individuales podrían pasar por alto."
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000/api/v1",
+			"type": "string"
+		}
+	]
+}
